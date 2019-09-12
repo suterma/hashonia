@@ -1,25 +1,35 @@
-# Creates a hash tree for tree-wise file integrity checks
+# Creates a hash list for tree-wise file integrity checks
 # -------------------------------------------------------
-# requires
-# pip3 install py_essentials
+# Credits: https://www.pythoncentral.io/hashing-files-with-python/
+# Credits: https://github.com/phyyyl/py_essentials
 
-from py_essentials import hashing as hs
-algorithm = 'md5' 
-dir = "./"
+import os, hashlib
+BLOCKSIZE = 65536
+current_dir = os.getcwd()
 
-print("Creating hash tree for " + dir + " using " + algorithm + "...")
 
-hashtree = hs.createHashtree(dir, algorithm)
+jsonstring = '{'+ "\r\n"
 
-from datetime import datetime
-date = datetime.today().strftime('%Y-%m-%d')
+for root,dirs,files in os.walk(current_dir):
+    for f in files:
+        current_file = os.path.join(root,f)
+        hasher = hashlib.md5()
 
-filename = 'HashTree.' + date + '.' + algorithm
-print("Saving to file " + filename)
+        with open(current_file, 'rb') as afile:
+            buf = afile.read(BLOCKSIZE)
+            while len(buf) > 0:
+                hasher.update(buf)
+                buf = afile.read(BLOCKSIZE)
+        print (current_file + ": "+ hasher.hexdigest())
 
-import json
-print(hashtree)
-print(json.dumps(hashtree, sort_keys=True, indent=4))
+        jsonstring = jsonstring + '    "' + current_file + '":"' + hasher.hexdigest() + '",' + "\r\n"
 
-with open(filename, 'w') as outfile:
-	outfile.write(hashtree)
+if jsonstring[-1] == "{":
+    jsonstring = jsonstring + "\r\n" + "}"
+else:
+    jsonstring = jsonstring[:-1] + "\r\n" + "}"
+
+print(jsonstring)
+
+with open("testoutput.txt", 'w') as outputFile:
+    outputFile.write(jsonstring)
