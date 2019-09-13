@@ -7,7 +7,7 @@ Use it to periodically verify the integrity of files in large archives. This too
 ```bash
 python3 hashonia.py
 ```
-This will walk the directory tree at the current position, calculatinng md5 hashes for all files encountered.
+This will walk the directory tree at the current position, calculating md5 hashes for all files encountered.
 
 # How it works:
 Walks the file tree from the current working directory. For each file encountered, a hash is calculated and written to a text file.
