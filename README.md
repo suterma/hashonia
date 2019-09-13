@@ -9,6 +9,9 @@ python3 hashonia.py
 ```
 This will walk the directory tree at the current position, calculatinng md5 hashes for all files encountered.
 
+# How it works:
+Walks the file tree from the current working directory. For each file encountered, a hash is calculated and written to a text file.
+It is optimised for large files and large trees, using block readings, and immediate file writes. Shows progress output.
 
 # Credits
 Uses py_essentials (https://github.com/phyyyl/py_essentials) from phyyyl
